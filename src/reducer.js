@@ -1,33 +1,14 @@
-// export const initalState = {
-//   basket: [],
-// };
-
-// const reducer = (state = { item: [] }, action) => {
-//   console.log(action);
-//   switch (action.type) {
-//     case "ADD_TO_BASKET":
-//       return {
-//         ...state,
-//         basket: [...state.basket, action.item],
-//       };
-//     default:
-//       return state;
-//   }
-// };
-
-// export default reducer;
-
-
 export const initialState = {
   basket: [],
-  user: null
+  user: null,
 };
 
-// Selector
-export const getBasketTotal = (basket) => 
+//Selector
+export const getBasketTotal = (basket) =>
   basket?.reduce((amount, item) => item.price + amount, 0);
 
-const reducer = (state, action) => {
+const reducer = (state = { item: [] }, action) => {
+  // 처음에 안됐던 이유, (state = {item:[]},action) 이렇게 인자를 줬는데, type is not iterable 오류가 떠서 장장 4시간 삽질;;
   console.log(action);
   switch (action.type) {
     case "ADD_TO_BASKET":
@@ -35,11 +16,23 @@ const reducer = (state, action) => {
         ...state,
         basket: [...state.basket, action.item],
       };
+    case "REMOVE_FROM_BASKET":
+      const index = state.basket.findIndex(
+        (basketItem) => basketItem.id === action.id
+      );
+      let newBasket =[...state.basket]
+      if (index >=0){
+        newBasket.splice(index,1)
+      }else{
+        console.warn(`cant remove product (id: ${action.id}) as its not in basket!`)
+      }
+      return {
+        ...state,
+        basket: newBasket
+      }
     default:
       return state;
   }
 };
 
 export default reducer;
-
-
