@@ -1,10 +1,32 @@
+import React, { useEffect } from "react";
 import "./App.css";
 import Header from "./Header.js";
 import Home from "./Home.js";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Checkout from "./Checkout.js";
 import Login from "./Login";
+import { auth } from "./firebase";
+import { useStateValue } from "./StateProvider";
 function App() {
+  const [{}, dispatch] = useStateValue();
+  useEffect(() => {
+    auth.onAuthStateChanged((authUser) => {
+      console.log("the user is >>> ", authUser);
+      if (authUser) {
+        dispatch({
+          type: "SET_USER",
+          user: authUser,
+        });
+      } else {
+        //the user is logged out
+        dispatch({
+          type: "SET_USER",
+          user: null,
+        });
+      }
+    });
+    //will only run once when the app component loads...
+  }, []);
   return (
     //BEM 컨벤션
     <Router>

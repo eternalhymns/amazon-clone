@@ -20,16 +20,23 @@ const reducer = (state = { item: [] }, action) => {
       const index = state.basket.findIndex(
         (basketItem) => basketItem.id === action.id
       );
-      let newBasket =[...state.basket]
-      if (index >=0){
-        newBasket.splice(index,1)
-      }else{
-        console.warn(`cant remove product (id: ${action.id}) as its not in basket!`)
+      let newBasket = [...state.basket];
+      if (index >= 0) {
+        newBasket.splice(index, 1);
+      } else {
+        console.warn(
+          `cant remove product (id: ${action.id}) as its not in basket!`
+        );
       }
       return {
         ...state,
-        basket: newBasket
-      }
+        basket: newBasket,
+      };
+    case "SET_USER":
+      return {
+        ...state,
+        user: action.user,
+      };
     default:
       return state;
   }
